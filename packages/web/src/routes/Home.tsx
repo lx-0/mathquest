@@ -1,6 +1,6 @@
 export function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4">
+    <div className="flex flex-1 flex-col items-center justify-center bg-white px-4 py-12">
       <div className="w-full max-w-sm text-center">
         <h1 className="mb-2 text-4xl font-bold text-primary">MathQuest</h1>
         <p className="mb-8 text-lg text-gray-600">
@@ -12,6 +12,6 @@ export function Home() {
           </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

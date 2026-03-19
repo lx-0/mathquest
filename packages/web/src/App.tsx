@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AudioProvider } from "./contexts/AudioContext";
 import { LiveRegionProvider } from "./components/LiveRegion";
+import { AppLayout } from "./components/AppLayout";
 import { Home } from "./routes/Home";
 import { NotFound } from "./routes/NotFound";
 
@@ -9,10 +10,12 @@ export function App() {
     <AudioProvider>
       <LiveRegionProvider>
         <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AppLayout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AppLayout>
         </BrowserRouter>
       </LiveRegionProvider>
     </AudioProvider>
