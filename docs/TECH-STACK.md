@@ -24,6 +24,55 @@
 
 ---
 
+## Motion & Animation Engineering Standard
+
+**All animations must respect `prefers-reduced-motion` (WCAG 2.3.3 / finding A9).**
+This is a code review gate — no animated component may merge without it.
+
+### Rules (enforced at code review)
+
+| Rule | Requirement |
+|------|-------------|
+| Tailwind variants | Use `motion-safe:` for decorative animation classes; use `motion-reduce:` to provide a static or reduced alternative |
+| JS-driven animation | Read `usePrefersReducedMotion()` hook and skip or shorten animation when `true` |
+| No raw `animate-*` | Never apply a Tailwind `animate-*` class without a `motion-safe:` prefix, unless the animation is essential to functionality (e.g. an indeterminate progress spinner) |
+| Burst rings / particles | Always add `motion-reduce:hidden` to purely decorative burst elements |
+| Screen reader parity | Animated state changes (XP gain, streak update, badge unlock) must be announced via `useLiveRegion()` regardless of motion preference |
+
+### Pattern Reference
+
+```tsx
+// ✅ Correct — animation only fires when motion is allowed
+<div className="motion-safe:animate-bounce motion-reduce:ring-2 motion-reduce:ring-amber-400" />
+
+// ✅ Correct — decorative burst hidden under reduced motion
+<span className="motion-safe:animate-ping motion-reduce:hidden" aria-hidden="true" />
+
+// ✅ Correct — JS animation branches on hook
+const reduced = usePrefersReducedMotion();
+useEffect(() => {
+  if (reduced) { setDisplayed(value); return; }
+  // ... run counter animation
+}, [value, reduced]);
+
+// ❌ Wrong — unconditional animation class
+<div className="animate-bounce" />
+```
+
+### Components
+
+All animation components live in `src/components/` and `src/hooks/`:
+
+| File | Purpose |
+|------|---------|
+| `hooks/usePrefersReducedMotion.ts` | Hook that subscribes to the OS reduced-motion media query |
+| `components/XPCounter.tsx` | Animated XP count-up; instant update under reduced motion |
+| `components/StreakBadge.tsx` | Streak display with pulse ring on new streak; static ring under reduced motion |
+| `components/BadgePop.tsx` | Badge unlock bounce; no motion under reduced motion |
+| `components/LevelUpBurst.tsx` | Level-up overlay with radial burst rings; rings hidden under reduced motion |
+
+---
+
 ## Responsive-First Engineering Standard
 
 **Finding F6 from USER-TESTING.md elevated this to a Phase 1 requirement.** 6th graders overwhelmingly access content on mobile devices. Retrofitting responsive layout at Phase 5 would require rework of every screen. All UI must be built mobile-first from the first sprint.
