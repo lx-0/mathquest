@@ -50,44 +50,76 @@ describe("QuestionCard", () => {
       const { rerender } = render(<QuestionCard question={mcQuestion} onAnswer={onAnswer} />);
 
       // Blur the card to simulate user navigating to an answer choice
-      const firstChoice = screen.getByRole("button", { name: /A\. 1\/2/ });
-      firstChoice.focus();
-      expect(document.activeElement).toBe(firstChoice);
+      const firstRadio = screen.getByRole("radio", { name: /A\. 1\/2/i });
+      firstRadio.focus();
+      expect(document.activeElement).toBe(firstRadio);
 
       // Rerender with same id (e.g. updated onAnswer callback reference)
       rerender(<QuestionCard question={mcQuestion} onAnswer={vi.fn()} />);
 
-      // Focus should remain on the button, not jump back to the card
-      expect(document.activeElement).toBe(firstChoice);
+      // Focus should remain on the radio, not jump back to the card
+      expect(document.activeElement).toBe(firstRadio);
     });
   });
 
-  describe("multiple-choice variant", () => {
-    it("renders the question text", () => {
+  describe("WCAG 1.3.1 — multiple-choice fieldset/legend/radio pattern", () => {
+    it("renders question text as a <legend> inside a <fieldset>", () => {
       render(<QuestionCard question={mcQuestion} onAnswer={vi.fn()} />);
-      expect(screen.getByText("What is 3/4 + 1/4?")).toBeInTheDocument();
+      const fieldset = screen.getByRole("group");
+      expect(fieldset.tagName).toBe("FIELDSET");
+      expect(screen.getByText("What is 3/4 + 1/4?").tagName).toBe("LEGEND");
     });
 
-    it("renders all answer choices as buttons", () => {
+    it("renders all answer choices as radio inputs with labels", () => {
       render(<QuestionCard question={mcQuestion} onAnswer={vi.fn()} />);
-      expect(screen.getByRole("button", { name: /A\. 1\/2/ })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /B\. 1/ })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /C\. 4\/8/ })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /D\. 2/ })).toBeInTheDocument();
+      expect(screen.getByRole("radio", { name: /A\. 1\/2/i })).toBeInTheDocument();
+      expect(screen.getByRole("radio", { name: /B\. 1/i })).toBeInTheDocument();
+      expect(screen.getByRole("radio", { name: /C\. 4\/8/i })).toBeInTheDocument();
+      expect(screen.getByRole("radio", { name: /D\. 2/i })).toBeInTheDocument();
     });
 
-    it("calls onAnswer with selected choice", async () => {
+    it("all radios share the same name (radio group)", () => {
+      render(<QuestionCard question={mcQuestion} onAnswer={vi.fn()} />);
+      const radios = screen.getAllByRole("radio");
+      const names = radios.map((r) => r.getAttribute("name"));
+      expect(new Set(names).size).toBe(1);
+    });
+
+    it("each radio has a unique id matching its label's htmlFor", () => {
+      render(<QuestionCard question={mcQuestion} onAnswer={vi.fn()} />);
+      const radios = screen.getAllByRole("radio");
+      radios.forEach((radio) => {
+        const id = radio.getAttribute("id");
+        expect(id).toBeTruthy();
+        const label = document.querySelector(`label[for="${id}"]`);
+        expect(label).toBeInTheDocument();
+      });
+    });
+
+    it("calls onAnswer with selected choice when radio changes", async () => {
       const onAnswer = vi.fn();
       render(<QuestionCard question={mcQuestion} onAnswer={onAnswer} />);
-      await userEvent.click(screen.getByRole("button", { name: /B\. 1/ }));
+      await userEvent.click(screen.getByRole("radio", { name: /B\. 1/i }));
       expect(onAnswer).toHaveBeenCalledWith("1");
     });
   });
 
-  describe("numeric variant", () => {
-    it("renders the question text", () => {
+  describe("WCAG 1.3.1 — numeric variant label/submit pattern", () => {
+    it("renders the question text as a paragraph", () => {
       render(<QuestionCard question={numericQuestion} onAnswer={vi.fn()} />);
-      expect(screen.getByText("What is 6 × 7?")).toBeInTheDocument();
+      expect(screen.getByText("What is 6 × 7?").tagName).toBe("P");
+    });
+
+    it("has a visible <label> associated with the answer input (A3)", () => {
+      render(<QuestionCard question={numericQuestion} onAnswer={vi.fn()} />);
+      expect(screen.getByLabelText("Your answer")).toBeInTheDocument();
+    });
+
+    it("submit is a <button type=submit>, not a <div> (A23)", () => {
+      render(<QuestionCard question={numericQuestion} onAnswer={vi.fn()} />);
+      const btn = screen.getByRole("button", { name: /submit/i });
+      expect(btn.tagName).toBe("BUTTON");
+      expect(btn).toHaveAttribute("type", "submit");
     });
 
     it("calls onAnswer with typed value on submit", async () => {
