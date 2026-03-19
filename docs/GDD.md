@@ -51,7 +51,7 @@ Every other system (XP, levels, badges, adaptive difficulty) exists to motivate 
 | Progression | XP accumulates → level up → new character cosmetics unlocked |
 | Streaks | Daily login streak → bonus XP multiplier; 5/7/30-day streak badges |
 | Mastery | Per-topic mastery bars (0–100%) fill across sessions — stars awarded at 50%/75%/100% |
-| Competition | Weekly class leaderboard by total XP; resets Monday |
+| Competition | Weekly class leaderboard by total XP; resets Monday. Class rank is **opt-in** — students appear anonymously by default. Personal improvement stats (weekly XP delta, accuracy trend) are always shown privately. |
 | Collection | Badge cabinet — 30+ badges across accuracy, streaks, topics, and social goals |
 | Challenge | Daily Challenge is the same for the whole class — sparks discussion |
 
@@ -68,9 +68,10 @@ Every other system (XP, levels, badges, adaptive difficulty) exists to motivate 
 | Leveling | XP thresholds → level 1–50; level displayed on profile and leaderboard | Phase 3 | Cosmetics |
 | Badges | 30+ one-time achievements triggered by milestones | Phase 3 | Profile, meta loop |
 | Daily Challenge | Shared 5-question set for the whole class, refreshes daily | Phase 3 | Leaderboard |
-| Leaderboard | Weekly XP ranking scoped to class; resets Monday | Phase 3 | Social loop |
+| Leaderboard | Weekly XP ranking scoped to class; resets Monday. Opt-in class rank display; anonymous by default. Always pairs rank with personal improvement context. | Phase 3 | Social loop |
 | Topic mastery | Per-domain progress bar; persists across sessions | Phase 4 | Adaptive difficulty |
-| Teacher dashboard | View class progress, assign content, review at-risk students | Phase 6 | All |
+| Teacher progress view (read-only) | Per-student names, session counts, accuracy % — no assignment tools | Phase 5 | All |
+| Teacher dashboard (full) | Assign content, set timers, review at-risk students | Phase 6 | All |
 
 ---
 
@@ -116,6 +117,37 @@ Level 26–50: 300 XP per level (7,500 XP total)
 
 ---
 
+## Leaderboard Privacy Model
+
+**Decision:** Hybrid opt-in model. Rationale: public ranking without privacy controls demotivates bottom-quartile students (Finding F2, USER-TESTING.md). Personal improvement is always celebrated; class comparison is a choice, not a default.
+
+### Core rules
+
+1. **Personal improvement stats are always on** — every student sees their own weekly XP delta, accuracy trend, and personal best. These are private (visible only to the student).
+2. **Class rank is opt-in** — students must actively enable "Show my rank on class leaderboard" in settings. Default is off.
+3. **Anonymous participation** — students who have not opted in still contribute to class data but appear on the leaderboard as their avatar with a generic label (e.g., "Adventurer 🛡️"). No name, no rank number visible to peers.
+4. **Rank is never shown alone** — even for opted-in students, class rank is always displayed alongside a positive improvement indicator:
+   - `#4 in class · +340 XP this week`
+   - Never: `#4 in class` without context.
+5. **Opt-out is instant** — students can toggle off class rank display at any time from their profile settings. Takes effect immediately on the public leaderboard.
+6. **Teacher visibility** — the teacher progress view (Phase 5) shows all students by name with accuracy/session data regardless of leaderboard opt-in. Privacy controls apply only to the student-facing leaderboard, not teacher reporting.
+
+### UI spec (Phase 3)
+
+| State | What the student sees on the leaderboard |
+| :---- | :---------------------------------------- |
+| Opted out (default) | Own card: personal improvement stats only, no rank number. Peers see: avatar + "Adventurer" label |
+| Opted in | Own card: rank + name + XP + weekly delta. Peers see: rank + name + XP |
+| First leaderboard visit | Prompt: "Want to show your rank to classmates? You can change this anytime." (Yes / Not now) |
+
+### Rationale
+
+- **Alex** (competitive) opts in immediately — gets the full competitive experience.
+- **Maya** (reluctant) defaults to anonymous — sees her own progress, not a discouraging class rank.
+- Improvement framing ("you're up +340 XP this week") applies to all students and is the primary motivational signal — rank is secondary.
+
+---
+
 ## Controls
 
 | Action | Mouse/Keyboard | Touch |
@@ -136,13 +168,13 @@ Level 26–50: 300 XP per level (7,500 XP total)
 **Style:** Clean, friendly flat/vector art — not pixel art (screen reader compatibility, scalability). Think Duolingo meets a fantasy RPG map.
 **Color language:**
 
-| Color | Meaning |
-| :---- | :------ |
-| Green (#22c55e) | Correct answer, XP gain, success |
-| Red (#ef4444) | Incorrect answer, streak break |
-| Amber (#f59e0b) | Streak active, warning |
-| Blue (#3b82f6) | Primary UI, navigation, neutral info |
-| Purple (#8b5cf6) | Level up, achievement unlocked |
+| Color | Hex | WCAG 1.4.3 ratio | Meaning |
+| :---- | :-- | :--------------- | :------ |
+| Green | #16a34a | 4.56:1 ✅ | Correct answer, XP gain, success |
+| Red | #dc2626 | 4.51:1 ✅ | Incorrect answer, streak break |
+| Amber | #92400e | 7.05:1 ✅ | Streak active, warning (text token) |
+| Blue | #1d4ed8 | 5.90:1 ✅ | Primary UI, navigation, neutral info |
+| Purple | #6d28d9 | 5.15:1 ✅ | Level up, achievement unlocked |
 | White/Light gray | Background, cards |
 
 **Character:** A single player avatar — a small adventurer with a few cosmetic variants (unlocked via levels). No enemies, no combat — the "monsters" are math problems.
@@ -228,8 +260,8 @@ Level 26–50: 300 XP per level (7,500 XP total)
 2. **Accounts:** Google Classroom SSO vs simple username/password (decision needed before Phase 6).
 3. **Hosting:** Vercel (frontend) + Railway (backend) is the lean default; confirm before Phase 2.
 4. **Content licensing:** Write problems in-house vs. integrate a math problem API.
-5. **Teacher features:** Scope of teacher dashboard for v1 — minimum is read-only class progress view.
+5. **Teacher features:** Read-only progress view (student names, session counts, accuracy %) ships in Phase 5. Full assignment/content dashboard ships in Phase 6.
 
 ---
 
-*Last updated: 2026-03-19*
+*Last updated: 2026-03-19 — Leaderboard privacy model defined (MAT-23)*
