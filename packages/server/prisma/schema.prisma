@@ -1,0 +1,21 @@
+// MathQuest — Prisma schema (Phase 1 skeleton)
+// Full schema expands in Phase 2 with User, Session, Question, etc.
+// Database: PostgreSQL 15 (Railway)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Phase 1 placeholder — prevents empty-schema migration errors.
+// Replace with real models in Phase 2.
+model _SchemaMeta {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}

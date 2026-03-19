@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Base font ≥16px to prevent iOS auto-zoom on inputs (TECH-STACK standard) */
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+    /* No horizontal scroll at any viewport */
+    overflow-x: hidden;
+  }
+
+  /* Ensure all interactive elements meet ≥44×44px tap target (WCAG 2.5.5) */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+}

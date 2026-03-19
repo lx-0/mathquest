@@ -12,11 +12,11 @@ MathQuest makes math engaging by wrapping 6th-grade curriculum content in a game
 
 Lay the groundwork. No code shipped without these done.
 
-- [ ] Game Design Document (GDD) written and approved
-- [ ] Technology stack evaluated and documented
+- [x] Game Design Document (GDD) written and approved
+- [x] Technology stack evaluated and documented
 - [x] Responsive-first engineering standard established (375px minimum viewport, mobile-first CSS, ≥44px tap targets) — see TECH-STACK.md
-- [ ] GitHub repository initialized with CI skeleton
-- [ ] Project structure scaffolded (monorepo or single-app)
+- [x] GitHub repository initialized with CI skeleton
+- [x] Project structure scaffolded (monorepo: packages/web + packages/server)
 
 **Exit criteria:** Engineers can clone, run, and see a blank canvas with routing.
 
@@ -76,8 +76,9 @@ Make it good enough for real classrooms.
 - [ ] Responsive layout audit (mobile-first standard in place since Phase 1; this sprint verifies all screens under real device testing)
 - [ ] Usability testing with target-age students (at least 5 sessions)
 - [ ] Performance profiling: time-to-interactive < 2s on mid-range device
+- [ ] **Read-only teacher progress view** (pulled forward from Phase 6 — see Finding F4): teacher can log in and view per-student data — student names, total session count, and accuracy % per student. No assignment or content tools required; display-only.
 
-**Exit criteria:** Passes accessibility audit; at least 3/5 usability testers can complete a session without help.
+**Exit criteria:** Passes accessibility audit; at least 3/5 usability testers can complete a session without help; teacher can view class progress without assistance.
 
 ---
 
@@ -85,7 +86,7 @@ Make it good enough for real classrooms.
 
 Ship to real classrooms.
 
-- [ ] Classroom management: teacher dashboard (assign content, view student progress)
+- [ ] Full teacher dashboard (assign content, review at-risk students, set timers) — read-only progress view already shipped in Phase 5
 - [ ] Accounts: student login (SSO or simple username/password)
 - [ ] Beta rollout to 1–2 pilot classrooms
 - [ ] Feedback loop: in-app feedback widget + async interviews
@@ -99,7 +100,7 @@ Ship to real classrooms.
 
 | Phase | Status |
 |-------|--------|
-| Phase 1 — Foundation | 🟡 In Progress |
+| Phase 1 — Foundation | ✅ Done |
 | Phase 2 — Core Game Loop | ⬜ Not Started |
 | Phase 3 — Gamification | ⬜ Not Started |
 | Phase 4 — Content | ⬜ Not Started |

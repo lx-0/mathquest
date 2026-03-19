@@ -1,0 +1,20 @@
+{
+  "name": "mathquest",
+  "private": true,
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "concurrently --names web,server --prefix-colors cyan,yellow \"pnpm --filter web dev\" \"pnpm --filter server dev\"",
+    "build": "pnpm --filter web build && pnpm --filter server build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5"
+  }
+}
