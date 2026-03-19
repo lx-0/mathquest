@@ -23,4 +23,14 @@
   textarea {
     min-height: 44px;
   }
+
+  /* WCAG 2.4.7 — Visible focus indicator for all interactive elements.
+     Uses primary blue (5.90:1 contrast on white). Components may replace
+     this with focus-visible:outline-none + focus-visible:ring-* utilities
+     (ring is a box-shadow that provides an equivalent visible indicator).
+     Never use outline-none without a visible replacement on interactive elements. */
+  :focus-visible {
+    outline: 3px solid #1d4ed8; /* primary — 5.90:1 on white */
+    outline-offset: 2px;
+  }
 }
