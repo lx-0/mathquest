@@ -20,7 +20,7 @@ describe("QuestionCard", () => {
   describe("WCAG 2.4.3 — focus management", () => {
     it("focuses the card container on initial render", () => {
       render(<QuestionCard question={mcQuestion} onAnswer={vi.fn()} />);
-      const card = screen.getByRole("group", { name: /math question/i }).closest("div[tabindex]");
+      const card = screen.getByLabelText("Math question");
       expect(document.activeElement).toBe(card);
     });
 
